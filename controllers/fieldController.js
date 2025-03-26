@@ -1,5 +1,6 @@
 import Field from '../models/Field.js';
 import Booking from '../models/Booking.js';
+import { json } from 'express';
 
 export async function createField(req, res) {
   const field = await Field.create({ ...req.body, owner: req.user.id });
@@ -72,4 +73,18 @@ export async function searchFields(req, res) {
   const fields = await Field.find(query).sort(sortOption);
 
   res.json(fields);
+}
+
+export async function getFieldById(req, res) {
+  try {
+    console.log(req.params.id)
+    const field = await Field.findById(req.params.id);
+    if (!field) {
+      return res.status(404).json({ message: 'Field not found' });
+    }
+    res.json(field);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error });
+  }
 }

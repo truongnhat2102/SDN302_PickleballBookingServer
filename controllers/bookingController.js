@@ -61,3 +61,10 @@ export async function cancelBooking(req, res) {
 
   res.json({ msg: 'Booking cancelled', booking });
 }
+
+export async function getUnavailableSlots(req, res) {
+  const { fieldId, date } = req.query;
+  const bookings = await Booking.find({ field: fieldId, date });
+  const unavailableSlots = bookings.flatMap(b => b.timeSlot);
+  res.json({ unavailableSlots });
+}

@@ -20,3 +20,17 @@ export async function login(req, res) {
   const token = sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
   res.json({ token, user });
 }
+
+export async function getUserById(req, res) {
+  // const { userId } = req.param.id;
+  const user = await User.findById(req.params.id);
+  try {
+    if (!user) {
+      return res.status(404).json({ message: 'Field not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+}
